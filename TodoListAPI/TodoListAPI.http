@@ -1,0 +1,40 @@
+@TodoListAPI_HostAddress = https://localhost:7280
+
+POST {{TodoListAPI_HostAddress}}/api/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "title": "test",
+  "description": "test",
+  "isCompleted": false,
+  "createdDate": "2024-09-03T10:23:33.074Z",
+  "dueDate": "2024-09-10T10:23:33.074Z"
+}
+
+###
+
+GET {{TodoListAPI_HostAddress}}/api/todos
+
+###
+
+GET {{TodoListAPI_HostAddress}}/api/todos/1
+
+###
+
+DELETE {{TodoListAPI_HostAddress}}/api/todos/1
+
+###
+
+PUT {{TodoListAPI_HostAddress}}/api/todos/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "test2",
+  "description": "test2",
+  # "isCompleted": true,
+  # "createdDate": "2024-09-03T10:23:33.074Z",
+  "dueDate": "2024-09-10T10:23:33.074Z"
+
