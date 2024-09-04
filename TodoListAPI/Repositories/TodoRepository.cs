@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TodoListAPI.Data;
+using TodoListAPI.Interfaces;
 using TodoListAPI.Models;
 
-namespace TodoListAPI.Data.Repositories
+namespace TodoListAPI.Repositories
 {
     public class TodoRepository : ITodoRepository
     {

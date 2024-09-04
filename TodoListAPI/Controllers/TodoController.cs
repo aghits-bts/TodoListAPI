@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TodoListAPI.Data.Repositories;
+using TodoListAPI.Interfaces;
 using TodoListAPI.Models;
 
 namespace TodoListAPI.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/todos")]
     [ApiController]
     public class TodoController : ControllerBase
     {
@@ -15,7 +15,7 @@ namespace TodoListAPI.Controllers
             _repository = repository;
         }
 
-        //GET: api/Todos
+        //GET: api/todos
         [HttpGet]
         public async Task<IActionResult> GetAllTodos()
         {
@@ -23,7 +23,7 @@ namespace TodoListAPI.Controllers
             return Ok(todos);
         }
 
-        //POST: api/Todos
+        //POST: api/todos
         [HttpPost]
         public async Task<IActionResult> AddTodo(Todo todo)
         {
@@ -31,7 +31,7 @@ namespace TodoListAPI.Controllers
             return CreatedAtAction(nameof(AddTodo), new { id = todo.Id }, todo);
         }
 
-        //GET: api/Todos/{id}
+        //GET: api/todos/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTodoById(int id)
         {
@@ -43,7 +43,7 @@ namespace TodoListAPI.Controllers
             return Ok(todo);
         }
 
-        //PUT: api/Todos/{id}
+        //PUT: api/todos/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo(int id, Todo todo)
         {
@@ -51,7 +51,7 @@ namespace TodoListAPI.Controllers
             return NoContent();
         }
 
-        //DELETE: api/Todos/{id}
+        //DELETE: api/todos/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodo(int id)
         {

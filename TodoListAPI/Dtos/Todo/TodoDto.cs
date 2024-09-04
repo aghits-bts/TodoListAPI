@@ -1,6 +1,6 @@
-﻿namespace TodoListAPI.Models
+﻿namespace TodoListAPI.Dtos.Todo
 {
-    public class Todo
+    public class TodoDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
