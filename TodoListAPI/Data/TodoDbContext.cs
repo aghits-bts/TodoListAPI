@@ -11,11 +11,7 @@ namespace TodoListAPI.Data
         { 
         }
 
-        public TodoDbContext()
-        {
-        }
-
-        public virtual DbSet<Todo> Todos { get; set; }
+        public DbSet<Todo> Todos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

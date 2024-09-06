@@ -26,6 +26,7 @@ Accept: application/json
 POST {{TodoListAPI_HostAddress}}/api/todos
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZ2l2ZW5fbmFtZSI6InVzZXIxIiwibmJmIjoxNzI1NjE4NTM0LCJleHAiOjE3MjYyMjMzMzQsImlhdCI6MTcyNTYxODUzNH0.wA8FK4_0wuQ3cK505qjc3TiEwlVCMnSpnxoNSUZsTLpGE1PvWohFJYdo3FwpQWWwYQ4DiGc4lqy918TJwOTbdA
 
 {
   "title": "test",
@@ -38,23 +39,22 @@ Accept: application/json
 GET {{TodoListAPI_HostAddress}}/api/todos
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZ2l2ZW5fbmFtZSI6InVzZXIxIiwibmJmIjoxNzI1NjE4NTM0LCJleHAiOjE3MjYyMjMzMzQsImlhdCI6MTcyNTYxODUzNH0.wA8FK4_0wuQ3cK505qjc3TiEwlVCMnSpnxoNSUZsTLpGE1PvWohFJYdo3FwpQWWwYQ4DiGc4lqy918TJwOTbdA
+
 
 ###
 
-GET {{TodoListAPI_HostAddress}}/api/todos/1
+GET {{TodoListAPI_HostAddress}}/api/todos/4
 Content-Type: application/json
 Accept: application/json
-###
-
-DELETE {{TodoListAPI_HostAddress}}/api/todos/1
-Content-Type: application/json
-Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZ2l2ZW5fbmFtZSI6InVzZXIxIiwibmJmIjoxNzI1NjE4NTM0LCJleHAiOjE3MjYyMjMzMzQsImlhdCI6MTcyNTYxODUzNH0.wA8FK4_0wuQ3cK505qjc3TiEwlVCMnSpnxoNSUZsTLpGE1PvWohFJYdo3FwpQWWwYQ4DiGc4lqy918TJwOTbdA
 
 ###
 
 PUT {{TodoListAPI_HostAddress}}/api/todos/1
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZ2l2ZW5fbmFtZSI6InVzZXIxIiwibmJmIjoxNzI1NjE4NTM0LCJleHAiOjE3MjYyMjMzMzQsImlhdCI6MTcyNTYxODUzNH0.wA8FK4_0wuQ3cK505qjc3TiEwlVCMnSpnxoNSUZsTLpGE1PvWohFJYdo3FwpQWWwYQ4DiGc4lqy918TJwOTbdA
 
 {
   "title": "test2",
@@ -62,4 +62,12 @@ Accept: application/json
   "isCompleted": true,
   "dueDate": "2024-09-10T09:32:01.527447+07:00"
 }
+
+###
+
+DELETE {{TodoListAPI_HostAddress}}/api/todos/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZ2l2ZW5fbmFtZSI6InVzZXIxIiwibmJmIjoxNzI1NjE4NTM0LCJleHAiOjE3MjYyMjMzMzQsImlhdCI6MTcyNTYxODUzNH0.wA8FK4_0wuQ3cK505qjc3TiEwlVCMnSpnxoNSUZsTLpGE1PvWohFJYdo3FwpQWWwYQ4DiGc4lqy918TJwOTbdA
+
 

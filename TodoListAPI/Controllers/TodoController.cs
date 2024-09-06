@@ -1,66 +1,125 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using api.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TodoListAPI.Interfaces;
+using Serilog;
+using TodoListAPI.Dtos.Todo;
+using TodoListAPI.Helpers;
+using TodoListAPI.Interfaces;   
+using TodoListAPI.Mappers;
 using TodoListAPI.Models;
 
 namespace TodoListAPI.Controllers
 {
     [Route("api/todos")]
     [ApiController]
+    [Authorize]
     public class TodoController : ControllerBase
     {
-        private readonly ITodoRepository _repository;
-        public TodoController(ITodoRepository repository)
+        private readonly ITodoRepository _todoRepo;
+        private readonly UserManager<User> _userManager;
+        private readonly ILogger<TodoController> _logger;
+        public TodoController(ITodoRepository todoRepo, UserManager<User> userManager, ILogger<TodoController> logger)
         {
-            _repository = repository;
+            _todoRepo = todoRepo;
+            _userManager = userManager;
+            _logger = logger;
         }
 
         //GET: api/todos
         [HttpGet]
-        public async Task<IActionResult> GetAllTodos()
+        public async Task<IActionResult> GetAll([FromQuery] TodoQueryObject queryObject)
         {
-            var todos = await _repository.GetAllTodos();
-            return Ok(todos);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+            var userTodos = await _todoRepo.GetAllAsync(user, queryObject);
+            var userTodoDto = userTodos.Select(t => t.ToTodoDto());
+
+            Log.Information("TodoList => {@userTodoDto}", userTodoDto);
+            return Ok(userTodoDto);
         }
 
         //POST: api/todos
         [HttpPost]
-        public async Task<IActionResult> AddTodo(Todo todo)
+        [Authorize]
+        public async Task<IActionResult> Create([FromBody] CreateTodoRequestDto createDto)
         {
-            await _repository.AddTodo(todo);
-            return CreatedAtAction(nameof(AddTodo), new { id = todo.Id }, todo);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+
+            var todoModel = createDto.ToTodoFromCreateDTO(user.Id);
+            await _todoRepo.CreateAsync(todoModel);
+            return CreatedAtAction(nameof(GetById), new { id = todoModel.Id }, todoModel.ToTodoDto());
         }
 
         //GET: api/todos/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTodoById(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var todo = await _repository.GetTodoById(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+            var todo = await _todoRepo.GetByIdAsync(user, id);
             if (todo == null)
             {
                 return NotFound();
             }
-            return Ok(todo);
+
+            return Ok(todo.ToTodoDto());
         }
 
         //PUT: api/todos/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTodo(int id, Todo todo)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateTodo([FromRoute] int id, [FromBody] UpdateTodoRequestDto updateDto)
         {
-            await _repository.UpdateTodo(todo);
-            return NoContent();
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //DELETE: api/todos/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodo(int id)
-        {
-            var todo = await _repository.GetTodoById(id);
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+            var todo = await _todoRepo.UpdateAsync(user, id, updateDto.ToTodoFromUpdateDTO(user.Id));
             if (todo == null)
             {
                 return NotFound();
             }
-            await _repository.DeleteTodo(id);
+
+            return Ok(todo.ToTodoDto());
+        }
+
+        //DELETE: api/todos/{id}
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteTodo([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var username = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(username);
+            var todo = await _todoRepo.DeleteAsync(user, id);
+
+            if (todo == null)
+            {
+                return NotFound("Todo does not exist");
+            }
+
             return NoContent();
         }
     }

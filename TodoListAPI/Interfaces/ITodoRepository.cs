@@ -1,13 +1,15 @@
-﻿using TodoListAPI.Models;
+﻿using TodoListAPI.Dtos.Todo;
+using TodoListAPI.Helpers;
+using TodoListAPI.Models;
 
 namespace TodoListAPI.Interfaces
 {
     public interface ITodoRepository
     {
-        Task AddTodo(Todo todo);
-        Task<IEnumerable<Todo>> GetAllTodos();
-        Task<Todo?> GetTodoById(int id);
-        Task UpdateTodo(Todo todo);
-        Task DeleteTodo(int id);
+        Task<Todo> CreateAsync(Todo todoModel);
+        Task<List<Todo>> GetAllAsync(User user, TodoQueryObject queryObject);
+        Task<Todo?> GetByIdAsync(User user, int id);
+        Task<Todo?> UpdateAsync(User user, int id, Todo todoModel);
+        Task<Todo?> DeleteAsync(User user, int id);
     }
 }

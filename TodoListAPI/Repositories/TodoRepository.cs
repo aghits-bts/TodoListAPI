@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TodoListAPI.Data;
+using TodoListAPI.Dtos.Todo;
+using TodoListAPI.Helpers;
 using TodoListAPI.Interfaces;
 using TodoListAPI.Models;
 
@@ -13,56 +15,67 @@ namespace TodoListAPI.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddTodo(Todo todo)
+        public async Task<Todo> CreateAsync(Todo todoModel)
         {
-            _dbContext.Todos.Add(todo);
+            await _dbContext.Todos.AddAsync(todoModel);
             await _dbContext.SaveChangesAsync();
+            return todoModel;
         }
 
-        public async Task<IEnumerable<Todo>> GetAllTodos()
+        public async Task<List<Todo>> GetAllAsync(User user, TodoQueryObject queryObject)
         {
-            return await _dbContext.Todos.ToListAsync();
-        }
+            var todos = _dbContext.Todos.Where(u => u.UserId == user.Id).AsQueryable();
 
-        public async Task<Todo?> GetTodoById(int id)
-        {
-            return await _dbContext.Todos.FindAsync(id);
-        }
-
-        public async Task UpdateTodo(Todo todo)
-        {
-            _dbContext.Entry(todo).State = EntityState.Modified;
-
-            try
+            if (queryObject.IsCompleted.HasValue)
             {
-                await _dbContext.SaveChangesAsync();
+                todos = todos.Where(t => t.IsCompleted.Equals(queryObject.IsCompleted));
             }
-            catch (DbUpdateConcurrencyException)
+            if (queryObject.IsDescending == true)
             {
-                if (!TodoExist(todo.Id))
-                {
-                    throw new InvalidOperationException("Todo not found.");
-                }
-                else
-                {
-                    throw;
-                }
+                todos = todos.OrderByDescending(t => t.DueDate);
             }
+
+            var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
+
+            return await todos.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
         }
 
-        public async Task DeleteTodo(int id)
+        public async Task<Todo?> GetByIdAsync(User user, int id)
         {
-            var todo = await _dbContext.Todos.FindAsync(id);
-            if (todo != null) 
-            {
-                _dbContext.Todos.Remove(todo);
-                await _dbContext.SaveChangesAsync();
-            }
+            return await _dbContext.Todos.FirstOrDefaultAsync(t => t.UserId == user.Id && t.Id == id);
         }
 
-        private bool TodoExist(int id)
+        public async Task<Todo?> UpdateAsync(User user, int id, Todo todoModel)
         {
-            return _dbContext.Todos.Any(todo => todo.Id == id);
+            var existingTodo = await _dbContext.Todos.FirstOrDefaultAsync(t => t.UserId == user.Id && t.Id == id);
+
+            if (existingTodo == null)
+            {
+                return null;
+            }
+
+            existingTodo.Title = todoModel.Title;
+            existingTodo.Description = todoModel.Description;
+            existingTodo.IsCompleted = todoModel.IsCompleted;
+            existingTodo.DueDate = todoModel.DueDate;
+
+            await _dbContext.SaveChangesAsync();
+
+            return existingTodo;
+        }
+
+        public async Task<Todo?> DeleteAsync(User user, int id)
+        {
+            var todo = await _dbContext.Todos.FirstOrDefaultAsync(t => t.UserId == user.Id && t.Id == id);
+
+            if (todo == null)
+            {
+                return null;
+            }
+
+            _dbContext.Todos.Remove(todo);
+            await _dbContext.SaveChangesAsync();
+            return todo;
         }
     }
 }

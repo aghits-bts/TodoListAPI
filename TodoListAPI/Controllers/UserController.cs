@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using TodoListAPI.Dtos.User;
 using TodoListAPI.Interfaces;
 using TodoListAPI.Models;
-using TodoListAPI.Services;
 
 namespace TodoListAPI.Controllers
 {
@@ -88,14 +85,14 @@ namespace TodoListAPI.Controllers
 
             if (user == null)
             {
-                return Unauthorized("Invalid username!");
+                return Unauthorized("Username or password is incorrect");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (!result.Succeeded)
             {
-                return Unauthorized("Username not found or/and password incorrect");
+                return Unauthorized("Username or password is incorrect");
             }
 
             return Ok(

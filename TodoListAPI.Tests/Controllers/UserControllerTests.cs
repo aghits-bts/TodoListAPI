@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TodoListAPI.Tests.Controllers
 {
-    internal class UserControllerTests
+    public class UserControllerTests
     {
     }
 }

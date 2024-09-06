@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
-namespace TodoListAPI.Extensions
+namespace api.Extensions
 {
     public static class ClaimsExtensions
     {

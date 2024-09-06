@@ -7,6 +7,8 @@
         public string Description { get; set; } = string.Empty;
         public bool IsCompleted { get; set; } = false;
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public DateTime? DueDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
     }
 }
